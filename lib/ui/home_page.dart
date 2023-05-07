@@ -12,17 +12,32 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: const [
-          Text('Welcome to Flutter',
+        appBar: _appBar(),
+        body: Column(children: const [
+          Text(
+            'Welcome to Flutter',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
-        ]
-      )
-    );
+        ]));
   }
+
+_appBar() {
+  return AppBar(
+    leading: GestureDetector(
+      onTap: () {
+        print('Menu');
+      },
+      child: Icon(Icons.nightlight_round,
+      size: 20,),
+    ),
+    actions: [
+      Icon(Icons.person,
+      size: 20,),
+      SizedBox(width: 20,),
+    ]
+  );
+}
 }

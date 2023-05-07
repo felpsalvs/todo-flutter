@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
       title: 'Agendamento',
       debugShowCheckedModeBanner: false,
       theme:Themes.light,
-      themeMode: ThemeMode.light,
+      darkTheme: Themes.dark,
+      themeMode: ThemeMode.dark,
       home: HomePage()
     );
   }

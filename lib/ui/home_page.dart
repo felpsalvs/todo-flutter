@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../services/notification_services.dart';
 import '../services/theme_services.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,6 +13,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var notifyHelper;
+  @override
+  void initState() {
+    super.initState();
+    notifyHelper = NotifyHelper();
+    notifyHelper.initializeNotification();
+    notifyHelper.requestIOSPermissions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +42,10 @@ class _HomePageState extends State<HomePage> {
         leading: GestureDetector(
           onTap: () {
             ThemeService().switchTheme();
+            notifyHelper.displayNotification(
+                title: "Theme Changed",
+                body: Get.isDarkMode?"Activated Dark Mode":"Activated Light Mode"
+            );
           },
           child: Icon(
             Icons.nightlight_round,

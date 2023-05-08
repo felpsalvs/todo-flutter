@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
 class NotifyHelper {
@@ -8,7 +9,7 @@ class NotifyHelper {
       FlutterLocalNotificationsPlugin(); //
 
   initializeNotification() async {
-    //tz.initializeTimeZones();
+    tz.initializeTimeZones();
     // this is for latest iOS settings
     final DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(

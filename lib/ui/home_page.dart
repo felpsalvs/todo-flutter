@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../services/notification_services.dart';
 import '../services/theme_services.dart';
@@ -26,19 +27,26 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _appBar(),
-        body: Column(children: const [
-          Text(
-            'Welcome to Flutter',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+        body: Column(
+          children: [
+          Row(
+            children: [
+              Column(
+                children: [
+                  Text(DateFormat.yMMMMd().format(DateTime.now())),
+                ],//18:11
+              )
+            ],
           ),
-        ]));
+          ],
+        ));
   }
+
+            
 
   _appBar() {
     return AppBar(
+        elevation: 0,
         backgroundColor: context.theme.backgroundColor,
         leading: GestureDetector(
           onTap: () {

@@ -25,3 +25,9 @@ TextStyle get subHeadingStyle {
       textStyle: TextStyle(
           fontSize: 24, fontWeight: FontWeight.bold, color: darkHeaderClr));
 }
+
+TextStyle get headingStyle {
+  return GoogleFonts.lato(
+      textStyle: TextStyle(
+          fontSize: 30, fontWeight: FontWeight.bold, color: darkHeaderClr));
+}

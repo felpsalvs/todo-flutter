@@ -37,15 +37,17 @@ class _HomePageState extends State<HomePage> {
                       DateFormat.yMMMMd().format(DateTime.now()),
                       style: subHeadingStyle,
                     ),
-                    Text('today'),
-                  ],
-                ),
+                    Text('today',
+                        style: headingStyle,
+                )
+              ],
               ),
             ],
           ),
         ],
       ),
     );
+
   }
 
   AppBar _appBar() {

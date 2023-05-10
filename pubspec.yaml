@@ -39,7 +39,6 @@ dependencies:
   get:
   intl:
   google_fonts: 
-  flutter_local_notifications:
   flutter_native_timezone:
 dev_dependencies:
   flutter_test:

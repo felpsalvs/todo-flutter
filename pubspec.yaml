@@ -38,7 +38,8 @@ dependencies:
   get_storage: 
   get:
   intl:
-  google_fonts: 
+  google_fonts:
+  date_picker_timeline:  
   flutter_native_timezone:
 dev_dependencies:
   flutter_test:

@@ -23,31 +23,31 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar(),
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      DateFormat.yMMMMd().format(DateTime.now()),
-                      style: subHeadingStyle,
-                    ),
-                    Text('today',
+        appBar: _appBar(),
+        body: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        DateFormat.yMMMMd().format(DateTime.now()),
+                        style: subHeadingStyle,
+                      ),
+                      Text(
+                        'today',
                         style: headingStyle,
-                )
+                      )
+                    ],
+                  ),
+                ),
               ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-
+            ),
+          ],
+        ));
   }
 
   AppBar _appBar() {
@@ -59,7 +59,8 @@ class _HomePageState extends State<HomePage> {
           ThemeService().switchTheme();
           notifyHelper.displayNotification(
             title: "Theme Changed",
-            body: Get.isDarkMode ? "Activated Dark Mode" : "Activated Light Mode",
+            body:
+                Get.isDarkMode ? "Activated Dark Mode" : "Activated Light Mode",
           );
           notifyHelper.scheduledNotification();
         },

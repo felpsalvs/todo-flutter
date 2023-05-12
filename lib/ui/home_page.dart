@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var notifyHelper;
+  DateTime _selectedDate = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -26,11 +26,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _appBar(),
-        body: Column(
-          children: [
-            _addTaskBar(),
-            Container(
+      appBar: _appBar(),
+      body: Column(
+        children: [
+          _addTaskBar(),
+          _addDateBar(),
+        ],
+      ),
+    );
+  }
+
+  _addDateBar(){
+    return Container(
               margin: const EdgeInsets.only(left: 20, top: 10),
               child: DatePicker(
                 DateTime.now(),
@@ -43,53 +50,49 @@ class _HomePageState extends State<HomePage> {
                     textStyle: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Get.isDarkMode?Colors.white:Colors.black)
-                ),
+                        color: Get.isDarkMode ? Colors.white : Colors.black)),
                 dayTextStyle: GoogleFonts.lato(
                     textStyle: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Get.isDarkMode?Colors.white:Colors.black)
-                ),
+                        color: Get.isDarkMode ? Colors.white : Colors.black)),
                 monthTextStyle: GoogleFonts.lato(
                     textStyle: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Get.isDarkMode?Colors.white:Colors.black)
-                ),
+                        color: Get.isDarkMode ? Colors.white : Colors.black)),
+                onDateChange: (date) {
+                  _selectedDate = date;
+                }
               )
-            )
-          ],
-        ),
-        );
-  }
+            );
+    }
 
-  _addTaskBar(){
+  _addTaskBar() {
     return Container(
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-              child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                 
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        DateFormat.yMMMMd().format(DateTime.now()),
-                        style: subHeadingStyle,
-                      ),
-                      Text(
-                        'today',
-                        style: headingStyle,
-                      )
-                    ],
-                  ),
+                Text(
+                  DateFormat.yMMMMd().format(DateTime.now()),
+                  style: subHeadingStyle,
                 ),
-                MyButton(label: "+ Add Task", onTap: ()=>null)
+                Text(
+                  'today',
+                  style: headingStyle,
+                )
               ],
             ),
-            );
+          ),
+          MyButton(label: "+ Add Task", onTap: () => null)
+        ],
+      ),
+    );
   }
 
   AppBar _appBar() {

@@ -13,7 +13,7 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   DateTime _selectedDate = DateTime.now();
-  String _endTime='9:30 PM';
+  String _endTime = '9:30 PM';
   String _startTime = DateFormat('hh:mm a').format(DateTime.now()).toString();
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   style: headingStyle,
                 ),
                 MyInputField(title: 'Titulo', hint: 'Digite seu titulo'),
-                MyInputField(title: 'Observação', hint: 'Digite sua observação'),
+                MyInputField(
+                    title: 'Observação', hint: 'Digite sua observação'),
                 MyInputField(
                   title: 'Data',
                   hint: DateFormat.yMd().format(_selectedDate),
@@ -42,25 +43,35 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     },
                   ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
+                Row(children: [
+                  Expanded(
                       child: MyInputField(
-                        title: 'Data de inicio',
-                        hint: _startTime,
-                        widget: IconButton(
-                          onPressed: (){
-
-                          },
-                          icon: Icon(
-                            Icons.access_time_rounded,
-                            color:Colors.grey,
-                          )
-                        )
-                      )
-                    )
-                  ]
-                )
+                          title: 'Data de inicio',
+                          hint: _startTime,
+                          widget: IconButton(
+                              onPressed: () {
+                                _getTimeFromUser(isStartTime: true);
+                              },
+                              icon: Icon(
+                                Icons.access_time_rounded,
+                                color: Colors.grey,
+                              )))),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Expanded(
+                      child: MyInputField(
+                          title: 'Data do fim',
+                          hint: _endTime,
+                          widget: IconButton(
+                              onPressed: () {
+                                _getTimeFromUser(isStartTime: false);
+                              },
+                              icon: Icon(
+                                Icons.access_time_rounded,
+                                color: Colors.grey,
+                              ))))
+                ])
               ],
             )));
   }
@@ -108,5 +119,24 @@ class _AddTaskPageState extends State<AddTaskPage> {
     } else {
       print('oi');
     }
+  }
+
+  _getTimeFromUser({required bool isStartTime}) {
+    var pickedTime = _showTimePicker();
+    String _formatedTime = pickedTime.format(context);
+    if (pickedTime == null) {
+      print('cancelado');
+    } else if (isStartTime == true) {
+      _startTime = _formatedTime;
+    } else if (isStartTime == false) {
+      _endTime = _formatedTime;
+    }
+  }
+
+  _showTimePicker() {
+    return showTimePicker(
+        initialEntryMode: TimePickerEntryMode.input,
+        context: context,
+        initialTime: TimeOfDay(hour: 9, minute: 10));
   }
 }

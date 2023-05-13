@@ -15,6 +15,17 @@ class _AddTaskPageState extends State<AddTaskPage> {
   DateTime _selectedDate = DateTime.now();
   String _endTime = '9:30 PM';
   String _startTime = DateFormat('hh:mm a').format(DateTime.now()).toString();
+  int _selectedRemind = 5;
+  List<int> remindList = [
+    5,
+    10,
+    15,
+    20,
+  ];
+
+  String _selectedRepeat = 'None';
+  List<String> repeatList = ['None', 'Daily', 'Weekly', 'Monthly'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,58 +33,129 @@ class _AddTaskPageState extends State<AddTaskPage> {
         appBar: _appBar(context),
         body: Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Column(
-              children: [
-                Text(
-                  'Adicionar Agendamento',
-                  style: headingStyle,
+            child: Column(children: [
+              Text(
+                'Adicionar Agendamento',
+                style: headingStyle,
+              ),
+              MyInputField(title: 'Titulo', hint: 'Digite seu titulo'),
+              MyInputField(title: 'Observação', hint: 'Digite sua observação'),
+              MyInputField(
+                title: 'Data',
+                hint: DateFormat.yMd().format(_selectedDate),
+                widget: IconButton(
+                  icon: Icon(Icons.calendar_today_outlined, color: Colors.grey),
+                  onPressed: () {
+                    print('oi');
+                    _getDateFromUser();
+                  },
                 ),
-                MyInputField(title: 'Titulo', hint: 'Digite seu titulo'),
-                MyInputField(
-                    title: 'Observação', hint: 'Digite sua observação'),
-                MyInputField(
-                  title: 'Data',
-                  hint: DateFormat.yMd().format(_selectedDate),
-                  widget: IconButton(
-                    icon:
-                        Icon(Icons.calendar_today_outlined, color: Colors.grey),
-                    onPressed: () {
-                      print('oi');
-                      _getDateFromUser();
-                    },
-                  ),
+              ),
+              Row(children: [
+                Expanded(
+                    child: MyInputField(
+                        title: 'Data de inicio',
+                        hint: _startTime,
+                        widget: IconButton(
+                            onPressed: () {
+                              _getTimeFromUser(isStartTime: true);
+                            },
+                            icon: Icon(
+                              Icons.access_time_rounded,
+                              color: Colors.grey,
+                            )))),
+                SizedBox(
+                  width: 12,
                 ),
-                Row(children: [
-                  Expanded(
-                      child: MyInputField(
-                          title: 'Data de inicio',
-                          hint: _startTime,
-                          widget: IconButton(
-                              onPressed: () {
-                                _getTimeFromUser(isStartTime: true);
-                              },
-                              icon: Icon(
-                                Icons.access_time_rounded,
-                                color: Colors.grey,
-                              )))),
-                  SizedBox(
-                    width: 12,
+                Expanded(
+                    child: MyInputField(
+                        title: 'Data do fim',
+                        hint: _endTime,
+                        widget: IconButton(
+                            onPressed: () {
+                              _getTimeFromUser(isStartTime: false);
+                            },
+                            icon: Icon(
+                              Icons.access_time_rounded,
+                              color: Colors.grey,
+                            ))))
+              ]),
+              MyInputField(
+                title: 'Lembrete',
+                hint: '$_selectedRemind minutes early',
+                widget: DropdownButton(
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.grey,
                   ),
-                  Expanded(
-                      child: MyInputField(
-                          title: 'Data do fim',
-                          hint: _endTime,
-                          widget: IconButton(
-                              onPressed: () {
-                                _getTimeFromUser(isStartTime: false);
-                              },
-                              icon: Icon(
-                                Icons.access_time_rounded,
-                                color: Colors.grey,
-                              ))))
-                ])
-              ],
-            )));
+                  iconSize: 32,
+                  elevation: 4,
+                  style: subTitleStyle,
+                  underline: Container(
+                    height: 0,
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedRemind = int.parse(newValue!);
+                    });
+                  },
+                  items: remindList.map<DropdownMenuItem<String>>((int value) {
+                    return DropdownMenuItem<String>(
+                        value: value.toString(), child: Text(value.toString()));
+                  }).toList(),
+                ),
+              ),
+              MyInputField(
+                title: 'Repetir',
+                hint: '$_selectedRepeat',
+                widget: DropdownButton(
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.grey,
+                  ),
+                  iconSize: 32,
+                  elevation: 4,
+                  style: subTitleStyle,
+                  underline: Container(
+                    height: 0,
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedRepeat = newValue!;
+                    });
+                  },
+                  items:
+                      repeatList.map<DropdownMenuItem<String>>((String? value) {
+                    return DropdownMenuItem<String>(
+                        value: value,
+                        child:
+                            Text(value!, style: TextStyle(color: Colors.grey)));
+                  }).toList(),
+                ),
+              ),
+              Row(children: [
+                Column(
+                  children: [
+                    Text(
+                      'Color',
+                      style: titleStyle,
+                    ),
+                    Wrap(
+                        children: List<Widget>.generate(
+                          3, 
+                          (int index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: CircleAvatar(
+                        radius: 14,
+                        backgroundColor: Colors.grey,
+                        ),
+                      );
+                    }))
+                  ],
+                )
+              ])
+            ])));
   }
 
   _appBar(BuildContext context) {
@@ -121,15 +203,19 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
-  _getTimeFromUser({required bool isStartTime}) {
-    var pickedTime = _showTimePicker();
+  _getTimeFromUser({required bool isStartTime}) async {
+    var pickedTime = await _showTimePicker();
     String _formatedTime = pickedTime.format(context);
     if (pickedTime == null) {
       print('cancelado');
     } else if (isStartTime == true) {
-      _startTime = _formatedTime;
+      setState(() {
+        _startTime = _formatedTime;
+      });
     } else if (isStartTime == false) {
-      _endTime = _formatedTime;
+      setState(() {
+        _endTime = _formatedTime;
+      });
     }
   }
 
@@ -137,6 +223,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return showTimePicker(
         initialEntryMode: TimePickerEntryMode.input,
         context: context,
-        initialTime: TimeOfDay(hour: 9, minute: 10));
+        initialTime: TimeOfDay(
+          hour: int.parse(_startTime.split(':')[0]),
+          minute: int.parse(_startTime.split(':')[1].split(' ')[0]),
+        ));
   }
 }

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../services/theme_services.dart';
+import 'add_task_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -83,13 +84,13 @@ class _HomePageState extends State<HomePage> {
                   style: subHeadingStyle,
                 ),
                 Text(
-                  'today',
+                  'Today',
                   style: headingStyle,
                 )
               ],
             ),
           ),
-          MyButton(label: "+ Add Task", onTap: () => null)
+          MyButton(label: "+ Add Task", onTap: () => Get.to(AddTaskPage()))
         ],
       ),
     );

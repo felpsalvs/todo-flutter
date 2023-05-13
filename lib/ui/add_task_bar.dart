@@ -1,3 +1,4 @@
+import 'package:agendamento/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,7 +7,19 @@ class AddTaskPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _appBar(context), body: Container());
+    return Scaffold(
+      backgroundColor: context.theme.backgroundColor, 
+      appBar: _appBar(context), 
+      body: Container(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: Column(
+          children: [
+            Text(
+              'Adicionar Agendamento',
+              style: headingStyle,
+            )
+          ],)
+      ));
   }
 
   _appBar(BuildContext context) {
@@ -14,9 +27,11 @@ class AddTaskPage extends StatelessWidget {
       elevation: 0,
       backgroundColor: context.theme.backgroundColor,
       leading: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Get.back();
+        },
         child: Icon(
-          Get.isDarkMode ? Icons.wb_sunny_outlined : Icons.nightlight_round,
+          Icons.arrow_back_ios,
           size: 20,
           color: Get.isDarkMode ? Colors.white : Colors.black,
         ),

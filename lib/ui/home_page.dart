@@ -1,3 +1,4 @@
+import 'package:agendamento/controllers/task_controller.dart';
 import 'package:agendamento/ui/theme.dart';
 import 'package:agendamento/ui/widgets/button.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
@@ -19,6 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DateTime _selectedDate = DateTime.now();
+  final _taskController = Get.put(TaskController());
+
   @override
   void initState() {
     super.initState();
@@ -33,42 +36,62 @@ class _HomePageState extends State<HomePage> {
         children: [
           _addTaskBar(),
           _addDateBar(),
+          _showTasks(),
         ],
       ),
     );
   }
 
-  _addDateBar(){
-    return Container(
-              margin: const EdgeInsets.only(left: 20, top: 10),
-              child: DatePicker(
-                DateTime.now(),
-                height: 100,
-                width: 80,
-                initialSelectedDate: DateTime.now(),
-                selectionColor: primaryClr,
-                selectedTextColor: Colors.white,
-                dateTextStyle: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Get.isDarkMode ? Colors.white : Colors.black)),
-                dayTextStyle: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Get.isDarkMode ? Colors.white : Colors.black)),
-                monthTextStyle: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Get.isDarkMode ? Colors.white : Colors.black)),
-                onDateChange: (date) {
-                  _selectedDate = date;
-                }
-              )
+  _showTasks() {
+    return Expanded(child: Obx(() {
+      return ListView.builder(
+          itemCount: _taskController.taskList.length,
+          itemBuilder: (_, index) {
+            print(_taskController.taskList.length);
+            return GestureDetector(
+              onTap:(){
+                _taskController.delete(_taskController.taskList[index]);
+              },
+              child: Container(
+                width: 100,
+                height: 50,
+                color: Colors.green,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: Text(_taskController.taskList[index].title.toString()),
+              ),
             );
-    }
+          });
+    }));
+  }
+
+  _addDateBar() {
+    return Container(
+        margin: const EdgeInsets.only(left: 20, top: 10),
+        child: DatePicker(DateTime.now(),
+            height: 100,
+            width: 80,
+            initialSelectedDate: DateTime.now(),
+            selectionColor: primaryClr,
+            selectedTextColor: Colors.white,
+            dateTextStyle: GoogleFonts.lato(
+                textStyle: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Get.isDarkMode ? Colors.white : Colors.black)),
+            dayTextStyle: GoogleFonts.lato(
+                textStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Get.isDarkMode ? Colors.white : Colors.black)),
+            monthTextStyle: GoogleFonts.lato(
+                textStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Get.isDarkMode ? Colors.white : Colors.black)),
+            onDateChange: (date) {
+          _selectedDate = date;
+        }));
+  }
 
   _addTaskBar() {
     return Container(
@@ -91,7 +114,12 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          MyButton(label: "+ Add Task", onTap: () => Get.to(AddTaskPage()))
+          MyButton(
+              label: "+ Adicionar Agendamento",
+              onTap: () async {
+                await Get.to(() => AddTaskPage());
+                _taskController.getTasks();
+              })
         ],
       ),
     );

@@ -1,9 +1,12 @@
+import 'package:agendamento/models/task.dart';
 import 'package:agendamento/ui/theme.dart';
 import 'package:agendamento/ui/widgets/button.dart';
 import 'package:agendamento/ui/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../controllers/task_controller.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  final TaskController _taskController = Get.put(TaskController());
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -42,8 +46,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 'Adicionar Agendamento',
                 style: headingStyle,
               ),
-              MyInputField(title: 'Titulo', hint: 'Digite seu titulo', controller: _titleController,),
-              MyInputField(title: 'Observação', hint: 'Digite sua observação', controller: _noteController,),
+              MyInputField(
+                title: 'Titulo',
+                hint: 'Digite seu titulo',
+                controller: _titleController,
+              ),
+              MyInputField(
+                title: 'Observação',
+                hint: 'Digite sua observação',
+                controller: _noteController,
+              ),
               MyInputField(
                 title: 'Data',
                 hint: DateFormat.yMd().format(_selectedDate),
@@ -153,18 +165,31 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   _validateDate() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
-      //adicionar para base de dados
+      _addTaskToDb();
       Get.back();
     } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
       Get.snackbar('Obrigatório', 'Todos os campos são necessários!',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.white,
-      colorText: pinkClr,
-      icon:Icon(Icons.warning_amber_rounded,
-      color: Colors.red
-      )
-      );
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.white,
+          colorText: pinkClr,
+          icon: Icon(Icons.warning_amber_rounded, color: Colors.red));
     }
+  }
+
+  _addTaskToDb() async {
+    int value = await _taskController.addTask(
+        task: Task(
+      note: _noteController.text,
+      title: _titleController.text,
+      date: DateFormat.yMd().format(_selectedDate),
+      startTime: _startTime,
+      endTime: _endTime,
+      remind: _selectedRemind,
+      repeat: _selectedRepeat,
+      color: _selectedColor,
+      isCompleted: 0,
+    ));
+    print('My id is' + '$value');
   }
 
   _colorPallete() {

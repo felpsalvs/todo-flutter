@@ -40,11 +40,12 @@ dependencies:
   google_fonts:
   date_picker_timeline:  
   flutter_native_timezone:
+  sqflite_common_ffi:
   sqflite:
+  sqflite_common_ffi_web:
   flutter_staggered_animations:
 
 dev_dependencies:
-  sqflite_common_ffi:
   flutter_test:
     sdk: flutter
 

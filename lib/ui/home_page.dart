@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           itemCount: _taskController.taskList.length,
           itemBuilder: (_, index) {
             Task task = _taskController.taskList[index];
-            // print(task.toJson());
+            print(task.toJson());
             if (task.repeat == 'Daily') {
               return AnimationConfiguration.staggeredList(
                   position: index,
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
       required BuildContext context,
       bool isClose = false}) {
     return GestureDetector(
-        onTap:onTap,
+        onTap: onTap,
         child: Container(
             margin: const EdgeInsets.symmetric(vertical: 4),
             height: 55,

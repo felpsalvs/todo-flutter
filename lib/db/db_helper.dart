@@ -1,12 +1,17 @@
 import 'package:agendamento/models/task.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 class DBHelper {
   static Database? _db;
   static final int _version = 1;
   static final String _tableName = 'tasks';
 
-  static Future<void> initDb() async {
+  static Future<void> initDatabase() async {
+    databaseFactory = databaseFactoryFfiWeb;
+
     if (_db != null) {
       return;
     }
@@ -40,15 +45,15 @@ class DBHelper {
     return await _db!.query(_tableName);
   }
 
-  static delete(Task task) async{
+  static delete(Task task) async {
     return await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
   }
 
-  static update(int id) async{
+  static update(int id) async {
     return await _db!.rawUpdate('''
       UPDATE tasks
       SET isCompleted = ?
       WHERE id = ?
     ''', [1, id]);
-    }
+  }
 }

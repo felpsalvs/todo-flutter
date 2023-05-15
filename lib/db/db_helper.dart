@@ -1,46 +1,53 @@
 import 'package:agendamento/models/task.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
+import 'package:sqflite_common/sqlite_api.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+import '../main.dart';
 
 class DBHelper {
-  static Database? _db;
-  static final int _version = 1;
-  static final String _tableName = 'tasks';
+  static late Database _db;
 
-  static Future<void> initDb() async {
-    if (_db != null) {
-      return;
-    }
+  static Future<void> initialize() async {
     try {
-      String _path = await getDatabasesPath() + 'tasks.db';
-      _db =
-          await openDatabase(_path, version: _version, onCreate: (db, version) {
-        print('creating a new one');
-        return db.execute(
-          'CREATE TABLE $_tableName('
+      sqflite_ffi.sqfliteInit();
+      databaseFactory = databaseFactoryFfi;
+
+      final String path = await getDatabasesPath() + 'tasks.db';
+      _db = await openDatabase(path, version: 1, onCreate: (db, version) {
+        db.execute('CREATE TABLE tasks ('
           'id INTEGER PRIMARY KEY AUTOINCREMENT, '
           'title STRING, note TEXT, date STRING, '
           'startTime STRING, endTime STRING, '
           'remind INTEGER, repeat STRING, '
           'color INTEGER, '
-          'isCompleted INTEGER)',
-        );
+          'isCompleted INTEGER)');
       });
     } catch (e) {
-      print(e);
+      throw Exception('Failed to initialize database: $e');
     }
   }
 
   static Future<int> insert(Task? task) async {
-    print('insert function called');
-    return await _db?.insert(_tableName, task!.toJson()) ?? 1;
+    return await _db.insert('tasks', task!.toJson());
   }
 
   static Future<List<Map<String, dynamic>>> query() async {
-    print('query function called');
-    return await _db!.query(_tableName);
+    return await _db.query('tasks');
   }
 
-  static delete(Task task) {
-    
+  static Future<int> delete(Task task) async {
+    return await _db.delete('tasks', where: 'id=?', whereArgs: [task.id]);
   }
+
+  static initDb() {}
+}
+
+void main() async {
+  // Inicializar o banco de dados
+  await DBHelper.initialize();
+
+  runApp(MyApp());
 }

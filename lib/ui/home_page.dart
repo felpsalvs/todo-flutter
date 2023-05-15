@@ -50,21 +50,40 @@ class _HomePageState extends State<HomePage> {
       return ListView.builder(
           itemCount: _taskController.taskList.length,
           itemBuilder: (_, index) {
-            print(_taskController.taskList.length);
-            return AnimationConfiguration.staggeredList(
-                position: index,
-                child: SlideAnimation(
-                    child: FadeInAnimation(
-                        child: Row(
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          _showBottomSheet(
-                              context, _taskController.taskList[index]);
-                        },
-                        child: TaskTitle(_taskController.taskList[index]))
-                  ],
-                ))));
+            Task task = _taskController.taskList[index];
+            // print(task.toJson());
+            if (task.repeat == 'Daily') {
+              return AnimationConfiguration.staggeredList(
+                  position: index,
+                  child: SlideAnimation(
+                      child: FadeInAnimation(
+                          child: Row(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            _showBottomSheet(context, task);
+                          },
+                          child: TaskTitle(task))
+                    ],
+                  ))));
+            }
+            if (task.date == DateFormat.yMd().format(_selectedDate)) {
+              return AnimationConfiguration.staggeredList(
+                  position: index,
+                  child: SlideAnimation(
+                      child: FadeInAnimation(
+                          child: Row(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            _showBottomSheet(context, task);
+                          },
+                          child: TaskTitle(task))
+                    ],
+                  ))));
+            } else {
+              return Container();
+            }
           });
     }));
   }
@@ -90,61 +109,67 @@ class _HomePageState extends State<HomePage> {
               : _bottomSheetButton(
                   label: 'Tarefa completa',
                   onTap: () {
+                    _taskController.markTaskCompleted(task.id!);
                     Get.back();
                   },
                   clr: primaryClr,
                   context: context),
-                  _bottomSheetButton(
-                  label: 'Deletar tarefa',
-                  onTap: () {
-                    Get.back();
-                  },
-                  clr: Colors.red[300]!,
-                  context: context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _bottomSheetButton(
-                  label: 'Fechar',
-                  onTap: () {
-                    Get.back();
-                  },
-                  clr: Colors.red[300]!,
-                  isClose:true,
-                  context: context),
-                  SizedBox(
-                    height: 10,
-                  ),
+          _bottomSheetButton(
+              label: 'Deletar tarefa',
+              onTap: () {
+                Get.back();
+              },
+              clr: Colors.red[300]!,
+              context: context),
+          SizedBox(
+            height: 20,
+          ),
+          _bottomSheetButton(
+              label: 'Fechar',
+              onTap: () {
+                _taskController.delete(task);
+                Get.back();
+              },
+              clr: Colors.red[300]!,
+              isClose: true,
+              context: context),
+          SizedBox(
+            height: 10,
+          ),
         ])));
   }
 
   _bottomSheetButton(
       {required String label,
-      required Function onTap,
+      required Function()? onTap,
       required Color clr,
       required BuildContext context,
       bool isClose = false}) {
     return GestureDetector(
         onTap:onTap,
         child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 4),
-          height: 55,
-          width: MediaQuery.of(context).size.width * 0.9,
-          decoration: BoxDecoration(
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            height: 55,
+            width: MediaQuery.of(context).size.width * 0.9,
+            decoration: BoxDecoration(
               border: Border.all(
-                width: 2,
-                color: isClose == true ? Colors.red : clr,
-              ),
+                  width: 2,
+                  color: isClose == true
+                      ? Get.isDarkMode
+                          ? Colors.grey[600]!
+                          : Colors.grey[300]!
+                      : clr),
               borderRadius: BorderRadius.circular(20),
-              color: isClose == true ? Colors.red : clr,
-          ),
-          child:Center(
-            child: Text(
-              label,
-              style: isClose?titleStyle:titleStyle.copyWith(color: Colors.white),
+              color: isClose == true ? Colors.transparent : clr,
             ),
-          )
-        ));
+            child: Center(
+              child: Text(
+                label,
+                style: isClose
+                    ? titleStyle
+                    : titleStyle.copyWith(color: Colors.white),
+              ),
+            )));
   }
 
   _addDateBar() {
@@ -172,7 +197,9 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.w600,
                     color: Get.isDarkMode ? Colors.white : Colors.black)),
             onDateChange: (date) {
-          _selectedDate = date;
+          setState(() {
+            _selectedDate = date;
+          });
         }));
   }
 

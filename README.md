@@ -1,4 +1,4 @@
-# Web app de Agendamento
+# Web App de Agendamento em Flutter
 
 #### Foi usado as seguintes bibliotecas 
 <br/>

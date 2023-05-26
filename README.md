@@ -3,7 +3,8 @@
 #### Foi usado as seguintes bibliotecas 
 <br/>
 
-![image](https://github.com/felpsalvs/agendamento-flutter/assets/78622458/5b95bfc4-c4f6-4650-b601-9627c86c92e8)
+![image](https://github.com/felpsalvs/agendamento-flutter/assets/78622458/e64bbb0d-ee4b-4850-b296-0caaae9f260f)
+
 
 
 ## Getting Started

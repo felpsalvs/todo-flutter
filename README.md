@@ -1,12 +1,3 @@
-# Web App de Agendamento em Flutter
-
-#### Foi usado as seguintes bibliotecas 
-<br/>
-
-![image](https://github.com/felpsalvs/agendamento-flutter/assets/78622458/e64bbb0d-ee4b-4850-b296-0caaae9f260f)
-
-
-
 ## Getting Started
 
 This project is a starting point for a Flutter application.
